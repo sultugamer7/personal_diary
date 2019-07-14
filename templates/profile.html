@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ username }}'s Profile
+{% endblock %}
+
+{% block main %}
+    <!-- Nav pills -->
+    <ul class="nav nav-pills nav-justified" style="font-size: 16px;">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="pill" href="#change">Change Password</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#delete">Delete Account</a>
+        </li>
+    </ul>
+    <br><br>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane container active" id="change">
+            <br>
+            <form action="/profile" method="post">
+                <div class="form-group">
+                    <input type="password" name="current" placeholder="Current Password" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="new" placeholder="New Password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="confirm" placeholder="Confirm Password" class="form-control" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Change</button>
+            </form>
+        </div>
+        <div class="tab-pane container fade" id="delete">
+            <br>
+            <h5 style="color: #ff0000">WARNING:</h5>
+            <label>Deleting the account will also tear all of the pages written in diary.</label>
+            <br><br>
+            <form action="/delete" method="post">
+                <div class="form-group">
+                    <input class="form-control" name="password" id="password" placeholder="Password" type="password" required>
+                </div>
+                <button class="btn btn-lg btn-danger" type="submit">Delete Account</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

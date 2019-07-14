@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Write Page
+{% endblock %}
+
+{% block main %}
+    <form action="/write" method="post">
+        <div class="row" style="text-align: start;">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <label>{{ day }}, {{ date }}</label>
+                <br>
+                <label>{{ time }}</label>
+                <input type="hidden" name="time" value="{{ time }}">
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <textarea name="page" placeholder="Start writing..." class="form-control" maxlength="2450" style="width: 100%; height: 600px; font-size: 14px; font-family: cursive;" required>Dear Diary,
+
+</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <br>
+                <button class="btn btn-primary" type="submit" style="font-size: 16px; width: 100px;">Save</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    {% if pages|length == 0 %}
+        No pages in diary.
+        <a href="/write">Start writing now...</a>
+    {% else %}
+        <!-- Tear page confirmation -->
+        <script type="text/javascript" src="{{ url_for('static', filename = 'validations.js') }}"></script>
+
+        <!-- Bootstrap DataTable -->
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <script>
+            $(document).ready(function() {
+                $('#diary').DataTable( {
+                    "orderFixed": [[ 0, "desc" ]]
+                } );
+            } );
+        </script>
+        <table id="diary" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Page</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                    <tr>
+                        <td>{{ page.date }}</td>
+                        {% set page1 = page.page[0:80] + "..." %}
+                        <td style="text-align: start">{{ page1 }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-link" data-toggle="modal" data-target="#myModal{{ loop.index }}">
+                                Read
+                            </button>
+                            <!-- The Modal -->
+                            <div class="modal" id="myModal{{ loop.index }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content" style="text-align: start; white-space: pre-line;">
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body" style="padding-top: 0px;">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <label>{{ page.date }}<br>{{ page.time }}</label>
+
+                                            <label>{{ page.page }}</label>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if page.bookmarked == 0 %}
+                                <form action="/add_bookmark" method="post">
+                                    <input type="hidden" name="url" value="{{ request.url }}"/>
+                                    <input type="hidden" name="id" value="{{ page.id }}"/>
+                                    <button class="btn btn-sm btn-link" type="submit">Bookmark</button>
+                                </form>
+                            {% else %}
+                                <form action="/remove_bookmark" method="post" onsubmit="return confirmation('Remove bookmark?')">
+                                    <input type="hidden" name="url" value="{{ request.url }}"/>
+                                    <input type="hidden" name="id" value="{{ page.id }}"/>
+                                    <button class="btn btn-sm btn-link" type="submit">Bookmarked</button>
+                                </form>
+                            {% endif %}
+
+                            <form action="/tear" method="post" onsubmit="return confirmation('Tear page?')">
+                                <input type="hidden" name="url" value="{{ request.url }}"/>
+                                <input type="hidden" name="id" value="{{ page.id }}"/>
+                                <button class="btn btn-sm btn-link" type="submit">Tear Page</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
